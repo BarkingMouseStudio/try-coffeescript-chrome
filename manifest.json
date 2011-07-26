@@ -1,0 +1,14 @@
+{
+  "name": "Try CoffeeScript",
+  "version": "1.0",
+  "description": "A simple utility to \"Try CoffeeScript\" in your browser.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "browser_action": {
+    "default_icon": "icons/icon48.png",
+    "default_popup": "popup.html"
+  }
+}
