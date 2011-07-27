@@ -14,9 +14,19 @@
   $source = $(source_el)
   results_el = document.getElementById('results')
 
+  source = localStorage.getItem('source', source)
+  source_el.value = source if source
+  results = localStorage.getItem('results', results)
+  results_el.value = results if source
+
   compile = ->
+    source = source_el.value
+    localStorage.setItem('source', source)
+
     try
-      results_el.value = CoffeeScript.compile(source_el.value, bare: on)
+      results = CoffeeScript.compile(source, bare: on)
+      localStorage.setItem('results', results)
+      results_el.value = results
       $error.hide()
     catch error then $error.text(error.message).show()
 
