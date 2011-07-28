@@ -5,11 +5,15 @@
   textarea#source, textarea#results { border-radius: 4px; resize: none; font-family: 'Droid Sans Mono', monospace; font-size: 12px; line-height: 18px; background: #fff; color: #999; border: 1px solid #d9d9d9; border-top: 1px solid silver; padding: 12px; margin: 0; height: 200px; width: 400px; }
   textarea#source:hover, textarea#results:hover, textarea#source:focus, textarea#results:focus { border: 1px solid #4d90fe; box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3); outline: none; }
   textarea#source { margin: 0 0 8px; }
-  #error { font-family: 'Droid Sans Mono', monospace; color: #a00; font-size: 12px; line-height: 18px; margin: 8px 0 0; }
+  #error { font-family: 'Droid Sans Mono', monospace; color: #a00; font-size: 12px; line-height: 26px; margin: 8px 0 0; }
+  a#try { float: right; font-family: Helvetica, Arial, sans-serif; font-size: 12px; color: #666; text-shadow: 0 1px rgba(255, 255, 255, 0.1); text-decoration: none; padding: 8px; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 2px; margin: 8px 0 8px 8px; background: whiteSmoke; background-image: -webkit-linear-gradient(top, whiteSmoke, #f1f1f1); }
+  a#try:hover { border: 1px solid #c6c6c6; color: #333; }
+  a#try:active { background: #eee; box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2); }
 </style>
 
 <script type="text/coffeescript">
   $error = $(document.getElementById('error'))
+  $try = $(document.getElementById('try'))
   source_el = document.getElementById('source')
   $source = $(source_el)
   results_el = document.getElementById('results')
@@ -18,6 +22,13 @@
   source_el.value = source if source
   results = localStorage.getItem('results', results)
   results_el.value = results if source
+
+  handle_error = (message) -> $error.text(message).show()
+
+  run = (e) ->
+    e.preventDefault()
+    try eval(results)
+    catch error then handle_error(error.message)
 
   compile = ->
     source = source_el.value
@@ -28,13 +39,15 @@
       localStorage.setItem('results', results)
       results_el.value = results
       $error.hide()
-    catch error then $error.text(error.message).show()
+    catch error then handle_error(error.message)
 
-  $source.bind('keyup', -> compile())
+  $source.bind('keyup', compile)
+  $try.bind('click', run)
 </script>
 <script src="scripts/jquery.js"></script>
 <script src="scripts/coffeescript.js"></script>
 
 <textarea id="source" placeholder="enter your coffee-script here..."></textarea>
 <textarea id="results" placeholder="...javascript will come out here." disabled></textarea>
+<a href="#" id="try">Try CoffeeScript</a>
 <div id="error"></div>
