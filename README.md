@@ -12,5 +12,6 @@ Github: [https://github.com/FreeFlow/try-coffeescript-chrome](https://github.com
 Contact: [http://gplus.to/jimfleming](http://gplus.to/jimfleming) or [https://twitter.com/#!/freeflowapp](https://twitter.com/#!/freeflowapp)
 
 History:
-- added code persistence across sessions (using localStorage)
-- added "Try CoffeeScript" button to run the compiled script
+* added code persistence across sessions (using localStorage)
+* added "Try CoffeeScript" button to run the compiled script
+* removed "disabled" attribute from javascript output (it was preventing copy+paste...)
