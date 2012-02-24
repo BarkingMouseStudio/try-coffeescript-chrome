@@ -1,7 +1,11 @@
 <link href="http://fonts.googleapis.com/css?family=Droid+Sans+Mono&v2" rel="stylesheet" type="text/css">
-
+<link rel="stylesheet" type="text/css" href="codemirror.css" />
 <style>
   body { margin: 0; padding: 8px; background: #f1f1f1; font-size: 12px; }
+  .CodeMirror { border-radius: 4px; resize: none; font-family: 'Droid Sans Mono', monospace; font-size: 12px; line-height: 18px; background: #fff; border: 1px solid #d9d9d9; border-top: 1px solid silver; padding: 12px; margin: 0; height: 200px; width: 400px; }
+  .CodeMirror:hover, .CodeMirror:focus { border: 1px solid #4d90fe; box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3); outline: none; }
+  .CodeMirror-scroll {height: 200px;:}
+  textarea#source { margin: 0 0 8px; }
   textarea#source, textarea#results { border-radius: 4px; resize: none; font-family: 'Droid Sans Mono', monospace; font-size: 12px; line-height: 18px; background: #fff; color: #333; border: 1px solid #d9d9d9; border-top: 1px solid silver; padding: 12px; margin: 0; height: 200px; width: 400px; }
   textarea#source:hover, textarea#results:hover, textarea#source:focus, textarea#results:focus { border: 1px solid #4d90fe; box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3); outline: none; }
   textarea#source { margin: 0 0 8px; }
@@ -12,40 +16,47 @@
 </style>
 
 <script type="text/coffeescript">
-  $error = $(document.getElementById('error'))
-  $try = $(document.getElementById('try'))
-  source_el = document.getElementById('source')
-  $source = $(source_el)
-  results_el = document.getElementById('results')
+  $source = $('#source')
+  $results = $('#results')
+  source = CodeMirror.fromTextArea(document.getElementById('source'), {})
+  results = CodeMirror.fromTextArea document.getElementById('results'), {}
+  $error = $('#error')
+  $try = $('#try')
 
-  source = localStorage.getItem('source', source)
-  source_el.value = source if source
-  results = localStorage.getItem('results', results)
-  results_el.value = results if source
+  sourceCode = localStorage.getItem('source')
+  if sourceCode
+    source.setValue sourceCode
+  resultsCode = localStorage.getItem('results')
+  if resultsCode
+    results.setValue resultsCode
 
   handle_error = (message) -> $error.text(message).show()
 
   run = (e) ->
     e.preventDefault()
-    try eval(results)
+    try eval(resultsCode)
     catch error then handle_error(error.message)
 
   compile = ->
-    source = source_el.value
-    localStorage.setItem('source', source)
+    if $(this).attr('class').indexOf('focused') < 0
+      return
+    sourceCode = source.getValue()
+    localStorage.setItem('source', sourceCode)
 
     try
-      results = CoffeeScript.compile(source, bare: on)
-      localStorage.setItem('results', results)
-      results_el.value = results
+      resultsCode = CoffeeScript.compile(sourceCode, bare: on)
+      localStorage.setItem('results', resultsCode)
+      results.setValue resultsCode
       $error.hide()
     catch error then handle_error(error.message)
 
-  $source.bind('keyup', compile)
+  $('.CodeMirror').bind('keyup', compile)
   $try.bind('click', run)
 </script>
 <script src="scripts/jquery.js"></script>
+<script src="scripts/codemirror.js"></script>
 <script src="scripts/coffeescript.js"></script>
+<script src="scripts/coffeescript-mode.js"></script>
 
 <textarea id="source" placeholder="enter your coffee-script here..."></textarea>
 <textarea id="results" placeholder="...javascript will come out here."></textarea>
