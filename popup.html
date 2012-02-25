@@ -15,50 +15,19 @@
   a#try:active { background: #eee; box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2); }
 </style>
 
-<script type="text/coffeescript">
-  $source = $('#source')
-  $results = $('#results')
-  source = CodeMirror.fromTextArea(document.getElementById('source'), {})
-  results = CodeMirror.fromTextArea document.getElementById('results'), {}
-  $error = $('#error')
-  $try = $('#try')
-
-  sourceCode = localStorage.getItem('source')
-  if sourceCode
-    source.setValue sourceCode
-  resultsCode = localStorage.getItem('results')
-  if resultsCode
-    results.setValue resultsCode
-
-  handle_error = (message) -> $error.text(message).show()
-
-  run = (e) ->
-    e.preventDefault()
-    try eval(resultsCode)
-    catch error then handle_error(error.message)
-
-  compile = ->
-    if $(this).attr('class').indexOf('focused') < 0
-      return
-    sourceCode = source.getValue()
-    localStorage.setItem('source', sourceCode)
-
-    try
-      resultsCode = CoffeeScript.compile(sourceCode, bare: on)
-      localStorage.setItem('results', resultsCode)
-      results.setValue resultsCode
-      $error.hide()
-    catch error then handle_error(error.message)
-
-  $('.CodeMirror').bind('keyup', compile)
-  $try.bind('click', run)
-</script>
 <script src="scripts/jquery.js"></script>
+<script src="scripts/underscore-min.js"></script>
 <script src="scripts/codemirror.js"></script>
-<script src="scripts/coffeescript.js"></script>
 <script src="scripts/coffeescript-mode.js"></script>
+<script src="scripts/coffeescript.js"></script>
+<script src="scripts/editor.coffee" type="text/coffeescript"></script>
+<script src="scripts/js2coffee.min.js"></script>
 
-<textarea id="source" placeholder="enter your coffee-script here..."></textarea>
-<textarea id="results" placeholder="...javascript will come out here."></textarea>
+<div id="source_con">
+  <textarea id="source" placeholder="enter your coffee-script here..."></textarea>
+</div>
+<div id="results_con">
+  <textarea id="results" placeholder="...javascript will come out here."></textarea>
+</div>
 <a href="#" id="try">Try CoffeeScript</a>
 <div id="error"></div>
