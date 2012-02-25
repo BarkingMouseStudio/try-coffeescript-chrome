@@ -18,17 +18,19 @@
 <script type="text/coffeescript">
   $source = $('#source')
   $results = $('#results')
-  source = CodeMirror.fromTextArea(document.getElementById('source'), {})
-  results = CodeMirror.fromTextArea document.getElementById('results'), {}
+  source = CodeMirror.fromTextArea(document.getElementById('source'), {
+    smartIndent: false
+  })
+  results = CodeMirror.fromTextArea document.getElementById('results'), {
+    smartIndent: false
+  }
   $error = $('#error')
   $try = $('#try')
 
   sourceCode = localStorage.getItem('source')
-  if sourceCode
-    source.setValue sourceCode
+  source.setValue sourceCode if sourceCode
   resultsCode = localStorage.getItem('results')
-  if resultsCode
-    results.setValue resultsCode
+  results.setValue resultsCode if resultsCode
 
   handle_error = (message) -> $error.text(message).show()
 
@@ -38,8 +40,6 @@
     catch error then handle_error(error.message)
 
   compile = ->
-    if $(this).attr('class').indexOf('focused') < 0
-      return
     sourceCode = source.getValue()
     localStorage.setItem('source', sourceCode)
 
@@ -50,15 +50,34 @@
       $error.hide()
     catch error then handle_error(error.message)
 
-  $('.CodeMirror').bind('keyup', compile)
+  decompile = ->
+    resultsCode = results.getValue()
+    localStorage.setItem('results', resultsCode)
+
+    try 
+      sourceCode = Js2coffee.build(resultsCode)
+      localStorage.setItem('source', sourceCode);
+      source.setValue sourceCode
+      $error.hide()
+    catch error
+      handle_error(error.message)
+
+  $('#source_con').bind('keyup', compile)
+  $('#results_con').bind('keyup', decompile)
   $try.bind('click', run)
 </script>
 <script src="scripts/jquery.js"></script>
+<script src="scripts/underscore-min.js"></script>
 <script src="scripts/codemirror.js"></script>
 <script src="scripts/coffeescript.js"></script>
+<script src="scripts/js2coffee.min.js"></script>
 <script src="scripts/coffeescript-mode.js"></script>
 
-<textarea id="source" placeholder="enter your coffee-script here..."></textarea>
-<textarea id="results" placeholder="...javascript will come out here."></textarea>
+<div id="source_con">
+  <textarea id="source" placeholder="enter your coffee-script here..."></textarea>
+</div>
+<div id="results_con">
+  <textarea id="results" placeholder="...javascript will come out here."></textarea>
+</div>
 <a href="#" id="try">Try CoffeeScript</a>
 <div id="error"></div>
