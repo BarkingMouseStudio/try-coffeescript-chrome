@@ -1,10 +1,12 @@
   $source = $('#source')
   $results = $('#results')
   source = CodeMirror.fromTextArea(document.getElementById('source'), {
+    mode: 'coffeescript',
     matchBrackets: true,
     smartIndent: false
   })
   results = CodeMirror.fromTextArea document.getElementById('results'), {
+    mode: 'javascript',
     matchBrackets: true,
     smartIndent: false
   }
