@@ -1,9 +1,11 @@
   $source = $('#source')
   $results = $('#results')
   source = CodeMirror.fromTextArea(document.getElementById('source'), {
+    matchBrackets: true,
     smartIndent: false
   })
   results = CodeMirror.fromTextArea document.getElementById('results'), {
+    matchBrackets: true,
     smartIndent: false
   }
   $error = $('#error')
@@ -36,7 +38,7 @@
     resultsCode = results.getValue()
     localStorage.setItem('results', resultsCode)
 
-    try 
+    try
       sourceCode = Js2coffee.build(resultsCode)
       localStorage.setItem('source', sourceCode);
       source.setValue sourceCode
