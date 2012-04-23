@@ -42,11 +42,13 @@
     catch error then handle_error(error.message)
 
   decompile = ->
-    try source = Js2coffee.build(results_el.value)
-    if source
+    try
+      source = Js2coffee.build(results_el.value)
       source_el.value = source
       localStorage.setItem('results', results_el.value)
       localStorage.setItem('source', source)
+      $error.hide()
+    catch error then handle_error(error.message)
 
   $source.bind('keyup', compile)
   $results.bind('keyup', decompile)
@@ -58,7 +60,7 @@
 <script src="scripts/coffeescript.js"></script>
 <script src="scripts/js2coffee.js"></script>
 
-<textarea id="source" placeholder="enter your coffee-script here..."></textarea>
-<textarea id="results" placeholder="...javascript will come out here."></textarea>
+<textarea id="source" placeholder="Enter your coffee-script here..."></textarea>
+<textarea id="results" placeholder="...and your javascript here."></textarea>
 <a href="#" id="try">Try CoffeeScript</a>
 <div id="error"></div>
