@@ -23,7 +23,6 @@ results.setValue resultsCode if resultsCode
 handle_error = (message) -> $error.text(message).show()
 
 compile = ->
-  console.log 'compile'
   sourceCode = source.getValue()
   localStorage.setItem('source', sourceCode)
 
@@ -35,7 +34,6 @@ compile = ->
   catch error then handle_error(error.message)
 
 decompile = ->
-  console.log 'decompile'
   resultsCode = results.getValue()
   localStorage.setItem('results', resultsCode)
 
@@ -46,8 +44,8 @@ decompile = ->
     $error.hide()
   catch error then handle_error(error.message)
 
-$source.bind('keyup', compile)
-$results.bind('keyup', decompile)
+$('#source-wrapper').bind('keyup', compile)
+$('#results-wrapper').bind('keyup', decompile)
 
 run = (e) ->
   e.preventDefault()
