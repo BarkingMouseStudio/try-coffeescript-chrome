@@ -22,23 +22,8 @@ results.setValue resultsCode if resultsCode
 
 handle_error = (message) -> $error.text(message).show()
 
-run = (e) ->
-  e.preventDefault()
-  try eval(resultsCode)
-  catch error then handle_error(error.message)
-
 compile = ->
-  source = source_el.value
-  localStorage.setItem('source', source)
-
-  try
-    results = CoffeeScript.compile(source, bare: on)
-    localStorage.setItem('results', results)
-    results_el.value = results
-    $error.hide()
-  catch error then handle_error(error.message)
-
-compile = ->
+  console.log 'compile'
   sourceCode = source.getValue()
   localStorage.setItem('source', sourceCode)
 
@@ -50,6 +35,7 @@ compile = ->
   catch error then handle_error(error.message)
 
 decompile = ->
+  console.log 'decompile'
   resultsCode = results.getValue()
   localStorage.setItem('results', resultsCode)
 
@@ -62,5 +48,10 @@ decompile = ->
 
 $source.bind('keyup', compile)
 $results.bind('keyup', decompile)
+
+run = (e) ->
+  e.preventDefault()
+  try eval(resultsCode)
+  catch error then handle_error(error.message)
 
 $try.bind('click', run)
